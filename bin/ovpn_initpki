@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#
+# Initialize the EasyRSA PKI
+#
+
+if [ "$DEBUG" == "1" ]; then
+  set -x
+fi
+
+set -e
+
+source "$OPENVPN/ovpn_env.sh"
+
+# load more arguments CA Pass and CommonName
+OVPN_EASYRSA_CA_PWD=$1
+[[ -z $OVPN_EASYRSA_CA_PWD ]]  && echo "The CA password is required" && exit 2
+
+
+batch_args="--passin=pass:$OVPN_EASYRSA_CA_PWD --passout=pass:$OVPN_EASYRSA_CA_PWD"
+
+# creating PKI 
+easyrsa --batch init-pki
+
+# building CA
+easyrsa --batch $batch_args --req-cn="$OVPN_EASYRSA_CA"  build-ca
+
+easyrsa --batch gen-dh
+# openvpn --genkey secret $EASYRSA_PKI/ta.key # alpine:3.18.2
+openvpn --genkey --secret $EASYRSA_PKI/ta.key
+
+# req/sign server certificate
+easyrsa --batch --passin=pass:$OVPN_EASYRSA_CA_PWD build-server-full "$OVPN_CN" nopass
+
+# Generate the CRL for client/server certificates revocation.
+easyrsa --batch $batch_args gen-crl
+

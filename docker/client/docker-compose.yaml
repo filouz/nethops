@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  
+  nethops-client:
+    image: ghcr.io/filouz/nethops/client:local
+    volumes:
+      - <YOUR_OVPN_DIRECTORY>:/ovpn # must contains client.ovpn and client.pwd
+    networks:
+      - nolink-network
+    privileged: true
+
+  app:
+    image: curlimages/curl:latest
+    network_mode: "service:nethops-client"
+    environment:
+      - http_proxy=http://192.168.255.1:3128
+      - https_proxy=http://192.168.255.1:3128
+
+    command: ["/bin/zsh", "-c", "while true; do sleep 1000; done"]
+
+
+networks:
+  nethops-network:
+    driver: bridge

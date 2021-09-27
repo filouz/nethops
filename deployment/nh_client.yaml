@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nh-client
+  namespace: nethops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nh-client
+  template:
+    metadata:
+      labels:
+        app: nh-client
+    spec:
+      containers:
+      - name: nh-client
+        image: ghcr.io/filouz/nethops/client:local
+        securityContext:
+          privileged: true
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: ovpn-client
+          mountPath: /ovpn/client.ovpn
+          subPath: client.ovpn
+        - name: ovpn-client-pass
+          mountPath: /ovpn/client.pwd
+          subPath: client.pwd
+      volumes:
+      - name: ovpn-client
+        secret:
+          secretName: ovpn-client
+      - name: ovpn-client-pass
+        secret:
+          secretName: ovpn-client-pass
+      imagePullSecrets:
+      - name: regcred

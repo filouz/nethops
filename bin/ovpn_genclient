@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# Initialize the EasyRSA PKI
+#
+
+if [ "$DEBUG" == "1" ]; then
+  set -x
+fi
+
+set -e
+
+source "$OPENVPN/ovpn_env.sh"
+
+while getopts ":n:p:c:" opt; do
+  case $opt in
+    n)
+      CLIENT_NAME="$OPTARG"
+      ;;
+    p)
+      CLIENT_PWD="$OPTARG"
+      ;;
+    c)
+      OVPN_EASYRSA_CA_PWD="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+if [ -z "${CLIENT_NAME}" ]; then
+  echo "The client name (-n option) must be specified."
+  exit 1
+fi
+
+if [ -z "${CLIENT_PWD}" ]; then
+  echo "The client password (-p option) must be specified."
+  exit 1
+fi
+
+if [ -z "${OVPN_EASYRSA_CA_PWD}" ]; then
+  echo "The CA password (-c option) must be specified."
+  exit 1
+fi
+
+easyrsa --batch --passin=pass:$OVPN_EASYRSA_CA_PWD --passout=pass:$CLIENT_PWD build-client-full $CLIENT_NAME

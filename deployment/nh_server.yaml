@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nh-server-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  hostPath:
+    path: /mnt/HC_Volume_34116156/nethops/server
+    type: DirectoryOrCreate
+    
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nh-server-pvc
+  namespace: nethops
+spec:
+  volumeName: nh-server-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nh-server
+  namespace: nethops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nh-server
+  template:
+    metadata:
+      labels:
+        app: nh-server
+    spec:
+      containers:
+      - name: nh-server
+        image: ghcr.io/filouz/nethops:local
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 1194
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-volume
+          mountPath: /etc/openvpn
+      imagePullSecrets:
+      - name: regcred
+      volumes:
+      - name: test-volume
+        persistentVolumeClaim:
+          claimName: nh-server-pvc
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nh-server
+  namespace: nethops
+spec:
+  type: LoadBalancer
+  selector:
+    app: nh-server
+  ports:
+    - protocol: UDP
+      port: 24558
+      targetPort: 1194

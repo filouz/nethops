@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  nethops-server:
+    image: ghcr.io/filouz/nethops:local
+    container_name: nethops-server
+    working_dir: /scripts
+    ports:
+      - "24558:1194/udp"
+    volumes:
+      - <YOUR_DATA_DIRECTORY>:/etc/openvpn 
+    privileged: true
+    restart: always

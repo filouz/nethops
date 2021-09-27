@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# Default values
+DEFAULT_OVPN_DATA="$(pwd)/data"
+DEFAULT_OVPN_DOMAIN="nethops.dev.example.com"
+DEFAULT_OVPN_PORT="24558"
+DEFAULT_OVPN_CA="Nethops CA"
+
+# Prompt the user for input with a default value
+prompt() {
+    local msg="$1"
+    local default_value="$2"
+    read -p "$msg ($default_value): " value
+    echo "${value:-$default_value}"
+}
+
+# Ensure password is provided and is more than 4 characters long
+prompt_password() {
+    while true; do
+        read -s -p "Pick a secret password: " pwd
+        if [ ${#pwd} -gt 4 ]; then
+            echo "$pwd"
+            return
+        else
+            echo >&2  # Insert a newline before the error message on stderr
+            echo "Password must be more than 4 characters. Please enter a valid password." >&2
+        fi
+    done
+}
+
+# Check if the folder already exists on the host and handle it
+handle_existing_data_location() {
+    local data_location="$1"
+    if [ -d "$data_location" ] && [ -f "$data_location/ovpn_env.sh" ]; then
+        read -p "The location $data_location already has files. Should we replace them? (y/n): " override_choice
+        if [[ $override_choice =~ ^[Yy] ]]; then
+            return 0  # indicates values need to be re-prompted
+        else
+            source "$data_location/ovpn_env.sh"
+            OVPN_DOMAIN=$OVPN_CN
+            OVPN_EXPOSED_PORT=$OVPN_NODE_PORT
+            OVPN_CA=$OVPN_EASYRSA_CA
+            OVPN_CA_PWD=$(prompt_password)
+            return 1  # indicates values were loaded
+        fi
+    else
+        return 0  # indicates values need to be re-prompted
+    fi
+}
+
+write_config_mk() {
+    local ovpn_data="$1"
+    local ovpn_domain="$2"
+    local OVPN_EXPOSED_PORT="$3"
+    local ovpn_ca_pwd="$4"
+    local ovpn_ca="$5"
+
+    cat > config.mk <<EOF
+OVPN_DATA=$ovpn_data
+OVPN_DOMAIN=$ovpn_domain
+OVPN_PORT=$OVPN_EXPOSED_PORT
+OVPN_CA_PWD=$ovpn_ca_pwd
+OVPN_CA=$ovpn_ca
+EOF
+
+    echo
+    echo "Settings saved successfully!"
+}
+
+# Execution starts here
+OVPN_DATA=$(prompt "Where should we store the necessary files?" "$DEFAULT_OVPN_DATA")
+
+if handle_existing_data_location "$OVPN_DATA"; then
+    # Values were not loaded from existing location, so prompt user for them
+    OVPN_DOMAIN=$(prompt "What's the name of your server?" "$DEFAULT_OVPN_DOMAIN")
+    OVPN_EXPOSED_PORT=$(prompt "Choose a port number (like a door to enter)" "$DEFAULT_OVPN_EXPOSED_PORT")
+    OVPN_CA_PWD=$(prompt_password)
+    OVPN_CA=$(prompt "What should we name the certificate authority?" "$DEFAULT_OVPN_CA")
+
+fi
+
+write_config_mk "$OVPN_DATA" "$OVPN_DOMAIN" "$OVPN_EXPOSED_PORT" "$OVPN_CA_PWD" "$OVPN_CA"

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxyless
+  namespace: nethops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proxyless
+  template:
+    metadata:
+      labels:
+        app: proxyless
+    spec:
+      containers:
+      - name: proxyless
+        image: ghcr.io/filouz/nethops/client:local
+        securityContext:
+          privileged: true
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: ovpn-client
+          mountPath: /ovpn/client.ovpn
+          subPath: client.ovpn
+        - name: ovpn-client-pass
+          mountPath: /ovpn/client.pwd
+          subPath: client.pwd
+        command: 
+          - /bin/sh
+          - -c
+        args:
+          - |
+            printenv
+            echo "curling..."
+            while true; do
+              curl --connect-timeout 3 --max-time 3 -s https://api.ipify.org || echo "curl command failed"
+              echo ""
+              sleep 5
+            done
+      volumes:
+      - name: ovpn-client
+        secret:
+          secretName: ovpn-client
+      - name: ovpn-client-pass
+        secret:
+          secretName: ovpn-client-pass
+      imagePullSecrets:
+      - name: regcred

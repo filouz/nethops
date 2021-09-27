@@ -1,0 +1,8 @@
+kind: Secret
+apiVersion: v1
+type: kubernetes.io/dockerconfigjson
+metadata:
+  name: regcred
+  namespace: nethops
+stringData:
+  .dockerconfigjson: '{"auths":{"ghcr.io":{"auth":"<BASE64(user:password)>"}}}' # set your own registry credentials <BASE64(user:password)> 
