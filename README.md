@@ -1,6 +1,6 @@
 
 
-<img align="right" src="https://github.com/filouz/nethops/assets/3224369/1dba14f4-bba3-42c6-9711-cea0cea77de5" height="140"/>
+<img align="right" src="https://i.imgur.com/mAv9fj4.png" height="140"/>
 
 
 # Net`Hops`
