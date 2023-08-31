@@ -60,9 +60,23 @@ git clone https://github.com/filouz/nethops
 Create a folder `./vault/ovpn` to store your credentials files.
 
 - `client.ovpn`
+    You can remove/comment these lines to espace auto configuration :
+    ```config
+    up /scripts/update-resolv.sh
+    down /scripts/update-resolv.sh
+    ```
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
 To establish a connection with a NetHops server, utilize [OpenVPN Connect](https://openvpn.net/client/).
+
+```bash
+openvpn --script-security 2 --config ./.vault/ovpn/client.ovpn
+```
+
+Slient mode : 
+```bash
+openvpn --script-security 2 --config ./.vault/ovpn/client.ovpn --askpass ./.vault/ovpn/client.pwd
+```
 
 #### Using Docker
 
