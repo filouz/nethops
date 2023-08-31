@@ -1,17 +1,15 @@
 
-
 <img align="right" src="https://i.imgur.com/mAv9fj4.png" height="140"/>
 
+# NetHops
 
-# Net`Hops`
+NetHops is a community app that enables you to establish a network hop. This provides your friends and community members with secure, domain-specific access, guaranteeing a tailored browsing experience for each user.
 
-A community app that lets you establish a network Hop, giving friends and community members secure, domain-specific access, ensuring a tailored browsing experience for each user.
+## Prerequisites
 
-##  Prerequisites
+Docker must be installed and running on your system. [Install Docker](https://github.com/docker/docker-install)
 
-Docker must be installed and running on your system. [Install](https://github.com/docker/docker-install)
-
-##  Server
+## Server
 
 ### Setup
 
@@ -22,7 +20,9 @@ git clone https://github.com/filouz/nethops
 ```
 
 ### Managing Profiles
+
 - **Add a Profile**
+
     ```bash
     NAME="user"
     PASSWORD="strong_password"
@@ -30,81 +30,90 @@ git clone https://github.com/filouz/nethops
     ```
 
 - **Revoke a Profile**
+
     ```bash
     make revokeProfile name="$NAME"
     ```
 
 - **Generate .ovpn Files**
+
     ```bash
     make ovpnProfile name="$NAME"
     ```
 
-### How to run
+### How to Run
+
 ```bash
 make run
 ```
 
-For alternative run methods, see `docker/server/docker-compose.yaml`. You can also automate the deployment process using this [ansible collection](https://github.com/filouz/ansible-nethops)
+For alternative running methods, refer to `docker/server/docker-compose.yaml`. You can also automate the deployment process using this [Ansible collection](https://github.com/filouz/ansible-nethops).
 
-##  Client
+## Client
 
-### Prerequisites: 
+### Prerequisites
 
 Create a folder `./vault/ovpn` to store your credentials files.
 
 - `client.ovpn`
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-You can connect to a Nethops server using [Openvpn Connect](https://openvpn.net/client/).
-
-
+You can connect to a NetHops server using [OpenVPN Connect](https://openvpn.net/client/).
 
 #### Using Docker
-
 
 ```bash
 make client
 ```
 
-#### Using **docker-compose**
+#### Using docker-compose
 
-- Use the `docker-compose.yaml` file found at `./docker/client/docker-compose.yaml`.
+- Use the `docker-compose.yaml` file located in `./docker/client/docker-compose.yaml`.
 
 ```bash
 cd ./docker/client
 docker compose up
 ```
 
-#### Using **Kubernetes - as sidecar**
+#### Using Kubernetes as a Sidecar
 
 Use the `nh_client.yaml` file located at `./deployment/nh_client.yaml`.
 
-## 🌐 Managing Domains
+## 🌐 Restriction Domains
 
 Modify the `./scripts/domains.conf` file to control which domains users can access via the VPN.
 
 - **Example Structure**:
+
     ```
     .google.com
     .facebook.com
-    .tiktok.com    
+    .tiktok.com
     .ipify.org
     ```
 
-- **Domain Specifications**: Domains prefixed with a `.` allow all subdomains. For example, `.google.com` allows access to subdomains like `mail.google.com`.
+- **Domain Specifications**: Prefix domains with a `.` to allow all subdomains. For example, `.google.com` would include access to subdomains like `mail.google.com`.
 
-- **Applying Changes**: After updating the `domains.conf` file, restart the server for the changes to apply.
+- **Applying Changes**: After updating the `domains.conf` file, restart the server to apply the changes.
 
-##  VPN Client API
-When the VPN client is running, an API on port ***8080*** is available for VPN connection management:
+## VPN Client API
+
+When the VPN client is running, an API is available on port 8080 for VPN connection management:
 
 - **Endpoints**:
-    - `/start`: Start the VPN connection.
-    - `/stop`: Stop the active VPN connection.
-    - `/healthz`: Check service status (returns the current state of the service).
+
+    - `/start`: Starts the VPN connection.
+    - `/stop`: Stops the active VPN connection.
+    - `/healthz`: Checks the service status (returns the current state of the service).
+
+## Credits
+This project incorporates components from [kylemanna/docker-openvpn](https://github.com/kylemanna/docker-openvpn)
+
 
 ## Contributing
-Your contributions are appreciated! If you discover bugs or have enhancement suggestions, please create an issue or submit a pull request.
+
+Your contributions are welcome! If you find bugs or have suggestions for enhancements, please create an issue or submit a pull request.
 
 ## License
+
 This project is licensed under the GNU General Public License v3.0 (GPLv3).
