@@ -13,11 +13,15 @@ Docker must be installed and running on your system. [Install Docker](https://gi
 
 ### Setup
 
+
 ```bash
 git clone https://github.com/filouz/nethops
 
 ./configure && make
+
+make install # will erease the existing PKI
 ```
+
 
 ### Managing Profiles
 

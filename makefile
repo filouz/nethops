@@ -26,7 +26,7 @@ DOCKER_CMD = docker run --rm -it \
 ##############################################
 ##############################################
 
-all: build install
+all: build 
 
 build:
 	docker build $(ROOT_PATH) -f $(ROOT_PATH)/docker/server/Dockerfile -t $(REGISTRY)/nethops:$(TAG)
@@ -34,13 +34,19 @@ build:
 push:
 	docker push $(REGISTRY)/nethops:$(TAG)
 
-run:
+
+run: kill
 	docker run --rm -it -d \
 		-v $(OVPN_DATA):/etc/openvpn \
 		-p $(OVPN_PORT):1194/udp \
 		--privileged \
 		--name nethops-instance \
 		$(REGISTRY)/nethops:$(TAG)
+
+	docker logs -f nethops-instance
+
+kill: 
+	docker kill nethops-instance
 
 install: updateConfig
 	$(DOCKER_CMD) ovpn_initpki "${OVPN_CA_PWD}"
