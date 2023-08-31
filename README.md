@@ -58,7 +58,7 @@ Create a folder `./vault/ovpn` to store your credentials files.
 - `client.ovpn`
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-You can connect to a NetHops server using [OpenVPN Connect](https://openvpn.net/client/).
+To establish a connection with a NetHops server, utilize [OpenVPN Connect](https://openvpn.net/client/).
 
 #### Using Docker
 
