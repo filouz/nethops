@@ -52,6 +52,12 @@ function setupIptablesAndRouting {
 
 addArg "--config" "$OPENVPN/openvpn.conf"
 
+if [ ! -f "$OPENVPN/ovpn_env.sh" ]; then
+  echo "File 'ovpn_env.sh'  does not exist. Setup your PKI first."
+  exit 1
+fi
+
+
 source "$OPENVPN/ovpn_env.sh"
 
 mkdir -p /dev/net

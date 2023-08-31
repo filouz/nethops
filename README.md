@@ -7,12 +7,17 @@
 
 A community app that lets you establish a network Hop, giving friends and community members secure, domain-specific access, ensuring a tailored browsing experience for each user.
 
-##  Requirements
-- **Docker**: Install from [Docker official repository](https://github.com/docker/docker-install).
+##  Prerequisites
 
-## 🚀 Server Setup
-### Installation 
+Docker must be installed and running on your system. [Install](https://github.com/docker/docker-install)
+
+##  Server
+
+### Setup
+
 ```bash
+git clone https://github.com/filouz/nethops
+
 ./configure && make
 ```
 
@@ -34,33 +39,43 @@ A community app that lets you establish a network Hop, giving friends and commun
     make ovpnProfile name="$NAME"
     ```
 
-### Starting the Server
+### How to run
 ```bash
-make start
+make run
 ```
 
-For alternative run methods, see `docker/server/docker-compose.yaml`
+For alternative run methods, see `docker/server/docker-compose.yaml`. You can also automate the deployment process using this [ansible collection](https://github.com/filouz/ansible-nethops)
 
-##  Client Setup
-Prepare the necessary files: 
+##  Client
+
+### Prerequisites: 
+
+Create a folder `./vault/ovpn` to store your credentials files.
+
 - `client.ovpn`
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-### **DID #dockerINdocker**
+You can connect to a Nethops server using [Openvpn Connect](https://openvpn.net/client/).
+
+
+
+#### Using Docker
+
+
 ```bash
 make client
 ```
 
-### **docker-compose**
+#### Using **docker-compose**
+
 - Use the `docker-compose.yaml` file found at `./docker/client/docker-compose.yaml`.
-- Customize as needed.
-- Start the VPN client:
 
 ```bash
-docker-compose up
+cd ./docker/client
+docker compose up
 ```
 
-### **Kubernetes - as sidecar**
+#### Using **Kubernetes - as sidecar**
 
 Use the `nh_client.yaml` file located at `./deployment/nh_client.yaml`.
 

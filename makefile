@@ -34,7 +34,7 @@ build:
 push:
 	docker push $(REGISTRY)/nethops:$(TAG)
 
-start:
+run:
 	docker run --rm -it -d \
 		-v $(OVPN_DATA):/etc/openvpn \
 		-p $(OVPN_PORT):1194/udp \

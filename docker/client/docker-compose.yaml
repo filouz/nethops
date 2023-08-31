@@ -3,12 +3,15 @@ version: '3.8'
 services:
   
   nethops-client:
-    image: ghcr.io/filouz/nethops/client:local
+    build: 
+      context: ../../client
+      dockerfile: ../docker/client/Dockerfile
     volumes:
-      - <YOUR_OVPN_DIRECTORY>:/ovpn # must contains client.ovpn and client.pwd
+      - ../../.vault/ovpn:/ovpn 
     networks:
-      - nolink-network
+      - nethops-network
     privileged: true
+    restart: always
 
   app:
     image: curlimages/curl:latest
@@ -17,7 +20,7 @@ services:
       - http_proxy=http://192.168.255.1:3128
       - https_proxy=http://192.168.255.1:3128
 
-    command: ["/bin/zsh", "-c", "while true; do sleep 1000; done"]
+    command: ["/bin/sh", "-c", "while true; do sleep 1000; done"]
 
 
 networks:
