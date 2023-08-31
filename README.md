@@ -67,7 +67,7 @@ Create a folder `./vault/ovpn` to store your credentials files.
     ```
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-### Using Openvpn Connect
+#### Using Openvpn Connect
 
 To establish a connection with a NetHops server, utilize [OpenVPN Connect](https://openvpn.net/client/).
 
