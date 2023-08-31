@@ -53,6 +53,10 @@ For alternative running methods, refer to `docker/server/docker-compose.yaml`. Y
 
 ### Prerequisites
 
+```bash
+git clone https://github.com/filouz/nethops
+```
+
 Create a folder `./vault/ovpn` to store your credentials files.
 
 - `client.ovpn`
