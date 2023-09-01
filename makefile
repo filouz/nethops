@@ -1,5 +1,6 @@
 
-include config.mk
+
+-include config.mk
 
 REGISTRY = ghcr.io/filouz
 TAG = local

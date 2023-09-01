@@ -16,6 +16,9 @@ client_run: client_build
 		-v $(ROOT_PATH)/.vault/ovpn:/ovpn \
 		$(REGISTRY)/nethops/client:$(TAG) zsh
 
+client_local_run:
+	@sh $(CLIENT_PATH)/scripts/ovpn_run.sh "" "./.vault/ovpn" "./client/scripts"
+
 #########
 
 client_dev_build:
