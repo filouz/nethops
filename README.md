@@ -71,7 +71,7 @@ Create a folder `./vault/ovpn` to store your credentials files.
     ```
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-#### Local
+### Local
 
 
 ```bash
@@ -90,13 +90,13 @@ openvpn --script-security 2 --config ./.vault/ovpn/client.ovpn --askpass ./.vaul
 ```
 
 
-#### Using Docker
+### Using Docker
 
 ```bash
 make client
 ```
 
-#### Using docker-compose
+### Using docker-compose
 
 - Use the `docker-compose.yaml` file located in `./docker/client/docker-compose.yaml`.
 
@@ -105,7 +105,7 @@ cd ./docker/client
 docker compose up
 ```
 
-#### Using Kubernetes as a Sidecar
+### Using Kubernetes as a Sidecar
 
 Use the `nh_client.yaml` file located at `./deployment/nh_client.yaml`.
 
