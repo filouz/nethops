@@ -32,7 +32,6 @@ if [ -f "$DIR/client$CLIENT_ID.ovpn" ]; then
         openvpn --script-security 2 --config "$TMP_OVPN_FILE"
     fi
 
-    cat $TMP_OVPN_FILE
     # Remove temporary file
     rm -f "$TMP_OVPN_FILE"
 else
