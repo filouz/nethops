@@ -71,9 +71,14 @@ Create a folder `./vault/ovpn` to store your credentials files.
     ```
 - `client.pwd` (Optional: Contains the password in plaintext for silent mode.)
 
-#### Using Openvpn Connect
+#### Local
 
-To establish a connection with a NetHops server, utilize [OpenVPN Connect](https://openvpn.net/client/).
+
+```bash
+make client_local_run
+```
+
+You could also explore [OpenVPN Connect](https://openvpn.net/client/) as an alternative.
 
 ```bash
 openvpn --script-security 2 --config ./.vault/ovpn/client.ovpn
@@ -83,6 +88,7 @@ Slient mode :
 ```bash
 openvpn --script-security 2 --config ./.vault/ovpn/client.ovpn --askpass ./.vault/ovpn/client.pwd
 ```
+
 
 #### Using Docker
 
